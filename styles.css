@@ -1,0 +1,431 @@
+.reports-block-links .report-link {
+
+	margin-right: 15px;
+
+	display: inline-block;
+
+	vertical-align: top;
+
+	position: relative;
+
+}
+
+#block-region-content .reports-block-links .report-link {
+
+	width: 47%;
+
+	margin-right: 10px;
+
+}
+
+#block-region-content .report-link:last-child {
+
+	margin-right: 0;
+
+}
+
+.reports-block-links .report-link button {
+
+	width: 100%;
+
+	height: 100%;
+
+	font-size: 24px;
+
+	color: #fff;
+
+	text-decoration: none;
+
+	border: 1px solid #9739f9;
+
+	border-radius: 5px;
+
+	background: #9739f9;
+
+	padding: 15px 30px;
+
+	margin: 0;
+
+	display: inline-flex;
+
+	align-items: center;
+
+	outline: none;
+
+}
+/* 
+.reports-block-links .report-link button:hover,
+
+.reports-block-links .report-link button:focus,
+
+.reports-block-links .report-link button:active {
+
+	background: #9739f9 !important;
+
+	border-color: #9739f9 !important;
+
+} */
+
+.reports-block-links .report-link button i {
+
+	font-size: 30px;
+
+	margin-right: 15px;
+
+}
+
+.reports-block-links .report-link:nth-child(2n) button {
+
+	border-color: #677bea;
+
+	background: #677bea;
+
+}
+
+.reports-block-links .report-link:nth-child(3n) button {
+
+	border-color: #ec910e;
+
+	background: #ec910e;
+
+}
+
+.reports-block-links .report-link:nth-child(4n) button {
+
+	border-color: #8e558e;
+
+	background: #8e558e;
+
+}
+
+.reports-block-links .report-link:nth-child(5n) button {
+
+	border-color: #e14d43;
+
+	background: #e14d43;
+
+}
+
+
+/* .reports-block-links .report-link + .report-link button:hover,
+
+.reports-block-links .report-link + .report-link button:focus,
+
+.reports-block-links .report-link + .report-link button:active {
+
+	background: #677bea !important;
+
+	border-color: #677bea !important;
+
+} */
+
+.reports-block-links .report-link:last-child button {
+
+	border-color: #ff9b8f;
+
+	background: #ff9b8f;
+
+}
+
+/* .reports-block-links .report-link:last-child button:hover,
+
+.reports-block-links .report-link:last-child button:focus,
+
+.reports-block-links .report-link:last-child button:active {
+
+	border-color: #ff9b8f !important;
+
+	background: #ff9b8f !important;
+
+} */
+
+.visits-report-element {
+
+    margin-bottom: 3%;
+
+}
+
+.visits-report-element .chart-block {
+
+    padding: 0px 50px 0px 50px;
+
+}
+
+.visits-report-element .report-not-available {
+
+	margin-top: 2%;
+
+}
+
+
+
+.block_visitsreport .reports-block-links .report-link {
+
+	width: 100%;
+
+	height: auto;
+
+	margin: 0 0 15px 0;
+
+}
+
+.block_visitsreport .reports-block-links .report-link:last-child {
+
+	margin-bottom: 0;
+
+}
+
+.block_visitsreport .reports-block-links .report-link:after {
+
+	width: 50px;
+
+	height: 50px;
+
+}
+
+.block_visitsreport .reports-block-links .report-link button {
+
+	font-size: 16px;
+
+	text-align: left;
+
+	padding: 10px;
+
+}
+
+.block_visitsreport .reports-block-links .report-link button i {
+
+	font-size: 16px;
+
+}
+
+
+
+
+
+/*Chart page*/
+
+
+
+.visits-report-element .heading-block h3 {
+
+	display: inline-block;
+
+	vertical-align: middle;
+
+}
+
+.visits-report-element .heading-block span {
+
+	width: 37px;
+
+    height: 37px;
+
+    line-height: 37px;
+
+	text-indent: -999em;
+
+	border-radius: 50%;
+
+	padding: 0;
+
+	margin-right: 10px;
+
+    display: inline-block;
+
+    vertical-align: middle;
+
+}
+
+.visits-report-element .chart-block {
+
+	padding-top: 20px;
+
+	/* clear: both; */
+
+}
+
+.visits-report-element .top-section .heading-block a {
+
+	display: inline-block;
+
+	vertical-align: middle;
+
+}
+
+/* .visits-report-element .top-section .heading-block span.pull-left {
+
+	margin-top: 12px;
+
+} */
+
+.visits-report-element .top-section .heading-block span.pull-left i {
+
+	width: 100%;
+
+	line-height: 37px;
+
+	text-indent: 0;
+
+	float: left;
+
+}
+
+.visits-report-element .top-section .right-menu {
+
+	margin-top: 15px;
+
+}
+
+.visits-report-element .top-section .right-menu form .form-group {
+
+    margin-right: 10px;
+
+    display: inline-block;
+
+    vertical-align: bottom;
+
+}
+
+.visits-report-element .right-menu {
+
+	text-align: center;
+
+}
+
+
+
+.visits-report-element span.loading-icon.icon-no-margin {
+
+    display: inline-block;
+
+    margin-bottom: 1rem;
+
+    position: absolute;
+
+}
+
+
+
+.visits-report-element  #fitem_id_users {
+
+	text-align: left;
+
+}
+
+
+
+.visits-report-chart table.flexible {
+
+    display: none;
+
+}
+
+.visits-report-block .top-section .download-menu table.flexible {
+    display: none;
+}
+
+.visits-report-block .top-section .download-menu form {
+	margin : 20px 0!important;
+}
+
+
+.visits-report-element .download-menu {
+
+    margin-top: 15px;
+
+	margin-bottom: 1rem;
+
+	/* text-align: right; */
+
+}
+
+.visits-report-element .download-menu .form-inline {
+
+	justify-content: center;
+
+}
+
+
+
+.visits-report-element .download-menu > h2 {
+
+	display: none;
+
+}
+
+.visits-report-element .download-menu > form {
+	margin-bottom: 20px !important;
+}
+
+
+
+.visits-report-element #fitem_id_startdate fieldset label.form-check[data-fieldtype="checkbox"] {
+
+	display: none;
+
+}
+
+
+
+.visits-report-element .chart-block-parent {
+
+    overflow-y: auto;
+
+    height: 100%;
+
+    width: 100%;
+
+}
+
+/*visits report element*/
+.visits-report-element .reports-block .course-info-block .info-block {
+	padding: 0;
+	margin-bottom: 10px;
+}
+.visits-report-element .reports-block .course-info-block > .info-block .card .course-info-download .no-overflow {
+	display: none;
+}
+.visits-report-element .reports-block .course-info-block .info-block .course-info-download form {
+	margin: 20px 0 !important;
+	float: right;
+}
+.visits-report-element .reports-block .course-info-block .info-block .modules-info-block {
+	clear: both;
+}
+.visits-report-element .reports-block .course-info-block .info-block .modules-info-block .card .card-body form {
+	display: none;
+}
+.visits-report-element .reports-block .course-info-block .info-block .accordion-course-block .card .card-header {
+	border-bottom: 0;
+	padding: 0;
+}
+.visits-report-element .reports-block .course-info-block .info-block .accordion-course-block .card .card-header h5 button,
+.visits-report-element .reports-block .course-info-block .info-block .accordion-course-block .card .card-header h5 button:hover,
+.visits-report-element .reports-block .course-info-block .info-block .accordion-course-block .card .card-header h5 button:focus {
+	width: 100%;
+    text-align: left;
+	text-decoration: none;
+    padding: 12px 20px;
+}
+.visits-report-element .reports-block .course-info-block .info-block .accordion-course-block .card .card-header h5 button:before {
+    content: '\f107';
+	width: 30px;
+	height: 30px;
+	font-size: 16px;
+    font-family: 'FontAwesome';
+	color: #fff;
+	line-height: 30px;
+	text-align: center;
+	display: inline-block;
+	background-color: #0f6fc5;
+	border-radius: 50%;
+	margin-right: 10px;
+}
+.visits-report-element .reports-block .course-info-block .info-block .accordion-course-block .card .card-header h5 button.collapsed:before {
+	content: '\f105';
+}
+
+.visits-report-element .reports-block .course-info-block .info-block .accordion-course-block .card .card-header h5 button .course-img-block {
+	display: inline-block;
+}

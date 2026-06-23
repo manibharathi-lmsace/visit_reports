@@ -1,0 +1,64 @@
+<div class="reports-block-links">
+	{{#sitereport}}
+	<div class="report-link site-visit">
+		<form action="{{{sitereporturl}}}" method="post">
+			<input type="hidden" name="returnurl" value="{{{returnurl}}}">
+			<button type="submit"> <i class="fa fa-globe"></i> {{#str}} sitevisits, block_visitsreport {{/str}} </button>
+		</form>
+	</div>
+	{{/sitereport}}
+	{{#coursereport}}
+	{{#iscoursepage}}
+	<div class="report-link course-visit">
+		<form action="{{{coursereporturl}}}" method="post">
+			<input type="hidden" name="returnurl" value="{{{returnurl}}}">
+			<button type="submit"><i class="fa fa-book"></i> {{#str}} coursevisits, block_visitsreport {{/str}} </button>
+		</form>
+	</div>
+	{{/iscoursepage}}
+	{{/coursereport}}
+	{{#usersreport}}
+	<div class="report-link user-visit">
+		<form action="{{{usersreporturl}}}" method="post">
+			<input type="hidden" name="returnurl" value="{{{returnurl}}}">
+			<button type="submit"><i class="fa fa-users"></i>{{#str}} mostfrequentusers, block_visitsreport {{/str}}  </button>
+		</form>
+	</div>
+	{{/usersreport}}
+
+	{{#centralizereport}}
+	<div class="report-link centralize-report">
+		<form action="{{{centralizereporturl}}}" method="post">
+			<input type="hidden" name="returnurl" value="{{{returnurl}}}">
+			<button type="submit"><i class="fa fa-bar-chart"></i>{{#str}} strcentralizereport, block_visitsreport {{/str}}  </button>
+		</form>
+	</div>
+	{{/centralizereport}}
+
+	{{#userdepartment}}
+	<div class="report-link userdepartment-report">
+		<form action="{{{userdepartmenturl}}}" method="post">
+			<input type="hidden" name="returnurl" value="{{{returnurl}}}">
+			<button type="submit"><i class="fa fa-pie-chart"></i>{{#str}} struserdepartmentreport, block_visitsreport {{/str}}  </button>
+		</form>
+	</div>
+	{{/userdepartment}}
+
+	{{#accessactivities}}
+	<div class="report-link accessed-activities">
+		<form action="{{{accessactivitiesurl}}}" method="post">
+			<input type="hidden" name="returnurl" value="{{{returnurl}}}">
+			<button type="submit"><i class="fa fa-puzzle-piece"></i>{{#str}} strmostaccessedactivities, block_visitsreport {{/str}}  </button>
+		</form>
+	</div>
+	{{/accessactivities}}
+
+	{{#accesscourses}}
+	<div class="report-link accessed-courses">
+		<form action="{{{accesscoursesurl}}}" method="post">
+			<input type="hidden" name="returnurl" value="{{{returnurl}}}">
+			<button type="submit"><i class="fa fa-book"></i>{{#str}} strmostaccessedcourses, block_visitsreport {{/str}}  </button>
+		</form>
+	</div>
+	{{/accesscourses}}
+</div>
