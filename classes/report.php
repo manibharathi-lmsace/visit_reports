@@ -350,7 +350,7 @@ class report {
             $params = ['timestart' => $this->filter['start_timestamp'], 'timeend' => $this->filter['end_timestamp']];
         }
 
-        $sql = "SELECT lvt.cmid AS cm, cm.instance, m.name AS module, c.fullname AS coursename, lvt.timecreated, SUM(CAST(lvt.timespent AS BIGINT)) as timespent
+        $sql = "SELECT lvt.cmid AS cm, cm.instance, m.name AS module, c.fullname AS coursename, lvt.timecreated, SUM(CAST(lvt.timespent AS DECIMAL)) as timespent
             FROM {local_visits_track} lvt
             JOIN {course} c ON c.id = lvt.courseid
             JOIN {course_modules} cm ON cm.id = lvt.cmid
@@ -391,7 +391,7 @@ class report {
             $params = ['timestart' => $this->filter['start_timestamp'], 'timeend' => $this->filter['end_timestamp']];
         }
 
-        $sql = "SELECT lvt.courseid, c.fullname AS coursename, lvt.timecreated, SUM(CAST(lvt.timespent AS BIGINT)) as timespent
+        $sql = "SELECT lvt.courseid, c.fullname AS coursename, lvt.timecreated, SUM(CAST(lvt.timespent AS DECIMAL)) as timespent
             FROM {local_visits_track} lvt
             INNER JOIN {course} c ON c.id = lvt.courseid
             WHERE lvt.courseid != 1 AND lvt.userid ".$insql;
@@ -439,7 +439,7 @@ class report {
             $filtersql = ' AND lvt.timecreated BETWEEN :timestart and :timeend ';
             $params = ['timestart' => $this->filter['start_timestamp'], 'timeend' => $this->filter['end_timestamp']];
         }
-        $sql = "SELECT lvt.userid, u.firstname, u.lastname, u.email, u.department, SUM(CAST(lvt.timespent AS BIGINT)) as timespent
+        $sql = "SELECT lvt.userid, u.firstname, u.lastname, u.email, u.department, SUM(CAST(lvt.timespent AS DECIMAL)) as timespent
             FROM {local_visits_track} lvt
             INNER JOIN {user} u ON u.id = lvt.userid
             WHERE lvt.userid ".$insql;
@@ -578,7 +578,7 @@ class report {
             $records = $DB->get_records_sql($sql, $params); */
         ///} else {
             $sql = "SELECT lg.userid, c.fullname AS coursename, u.firstname, u.lastname, u.email, u.department, count(lg.id) As views,
-            (SELECT SUM(CAST(lvt.timespent AS BIGINT)) FROM {local_visits_track} lvt WHERE lvt.userid = lg.userid
+            (SELECT SUM(CAST(lvt.timespent AS DECIMAL)) FROM {local_visits_track} lvt WHERE lvt.userid = lg.userid
             AND lvt.cmid = :cmid $visitstrackfiltersql GROUP BY lvt.userid) AS timespent
             FROM {logstore_standard_log} lg
             JOIN {user} u ON u.id = lg.userid
@@ -893,7 +893,7 @@ class report {
             $params = ['startdate' => $this->filter['start_timestamp'], 'enddate' => $this->filter['end_timestamp']];
         }
 
-        $sql = "SELECT u.id, u.department, SUM(CAST(vt.timespent AS BIGINT)) AS dpart_timespent, count(*) AS userscount FROM {user} u
+        $sql = "SELECT u.id, u.department, SUM(CAST(vt.timespent AS DECIMAL)) AS dpart_timespent, count(*) AS userscount FROM {user} u
         LEFT JOIN {local_visits_track} vt ON vt.userid = u.id
         WHERE u.department <> '' ".$filtersql." GROUP BY u.id, u.department ";
 
@@ -1111,7 +1111,7 @@ class report {
             $yfield = 'fullname';
         } else {
 
-            $sql = "SELECT lvt.userid, u.firstname, u.lastname, lvt.timecreated, SUM(CAST(lvt.timespent AS BIGINT)) as timespent, count(*) AS usersessions
+            $sql = "SELECT lvt.userid, u.firstname, u.lastname, lvt.timecreated, SUM(CAST(lvt.timespent AS DECIMAL)) as timespent, count(*) AS usersessions
                 FROM {local_visits_track} lvt
                 INNER JOIN {user} u ON u.id = lvt.userid
                 WHERE lvt.userid ".$insql;
