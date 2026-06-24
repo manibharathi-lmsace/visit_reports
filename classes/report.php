@@ -170,7 +170,7 @@ class report {
             WHERE lvt.userid = :userid
             AND lvt.userid ".$insql;
             $sql .= $filtersql;
-            $sql .= "GROUP BY lvt.cmid ORDER BY timespent DESC";
+            $sql .= " GROUP BY lvt.cmid, cm.instance, m.name, c.fullname, c.id, lvt.timecreated ORDER BY timespent DESC";
             $reports = $DB->get_records_sql($sql, $params + $inparams, 0, 20);
             if ($reports) {
                 foreach ($reports as $report) {
@@ -350,14 +350,14 @@ class report {
             $params = ['timestart' => $this->filter['start_timestamp'], 'timeend' => $this->filter['end_timestamp']];
         }
 
-        $sql = "SELECT lvt.cmid AS cm, cm.instance, m.name AS module, c.fullname AS coursename, lvt.timecreated, SUM(lvt.timespent) as timespent
+        $sql = "SELECT lvt.cmid AS cm, cm.instance, m.name AS module, c.fullname AS coursename, lvt.timecreated, SUM(CAST(lvt.timespent AS BIGINT)) as timespent
             FROM {local_visits_track} lvt
             JOIN {course} c ON c.id = lvt.courseid
             JOIN {course_modules} cm ON cm.id = lvt.cmid
             JOIN {modules} m ON m.id = cm.module
             WHERE lvt.courseid != 1 AND lvt.userid ".$insql;
         $sql .= $filtersql;
-        $sql .= " GROUP BY lvt.cmid ORDER BY timespent DESC";
+        $sql .= " GROUP BY lvt.cmid, cm.instance, m.name, c.fullname, lvt.timecreated ORDER BY timespent DESC";
         $records = $DB->get_records_sql($sql, $params + $inparams, 0, 20 );
         if ($records) {
             array_map(function($record) {
@@ -391,12 +391,12 @@ class report {
             $params = ['timestart' => $this->filter['start_timestamp'], 'timeend' => $this->filter['end_timestamp']];
         }
 
-        $sql = "SELECT lvt.courseid, c.fullname AS coursename, lvt.timecreated, SUM(lvt.timespent) as timespent
+        $sql = "SELECT lvt.courseid, c.fullname AS coursename, lvt.timecreated, SUM(CAST(lvt.timespent AS BIGINT)) as timespent
             FROM {local_visits_track} lvt
             INNER JOIN {course} c ON c.id = lvt.courseid
             WHERE lvt.courseid != 1 AND lvt.userid ".$insql;
         $sql .= $filtersql;
-        $sql .= " GROUP BY lvt.courseid ORDER BY timespent DESC";
+        $sql .= " GROUP BY lvt.courseid, c.fullname, lvt.timecreated ORDER BY timespent DESC";
 
         $labelfunction = (function($value) use (&$labels) {
             $labels[] = $value->coursename;
@@ -439,7 +439,7 @@ class report {
             $filtersql = ' AND lvt.timecreated BETWEEN :timestart and :timeend ';
             $params = ['timestart' => $this->filter['start_timestamp'], 'timeend' => $this->filter['end_timestamp']];
         }
-        $sql = "SELECT lvt.userid, u.firstname, u.lastname, u.email, u.department, SUM(lvt.timespent) as timespent
+        $sql = "SELECT lvt.userid, u.firstname, u.lastname, u.email, u.department, SUM(CAST(lvt.timespent AS BIGINT)) as timespent
             FROM {local_visits_track} lvt
             INNER JOIN {user} u ON u.id = lvt.userid
             WHERE lvt.userid ".$insql;
@@ -448,10 +448,10 @@ class report {
             $sql .= ' AND u.department = :department';
             $params['department'] = $this->department;
         } else {
-            $sql .= "AND u.department != ''";
+            $sql .= " AND u.department != ''";
         }
 
-        $sql .= " GROUP BY lvt.userid ORDER BY timespent DESC";
+        $sql .= " GROUP BY lvt.userid, u.firstname, u.lastname, u.email, u.department ORDER BY timespent DESC";
         $records = $DB->get_records_sql($sql, $params + $inparams, 0, 20 );
         $alabel = get_string('firstname');
         $blabel = get_string('lastname', 'block_visitsreport');
@@ -469,7 +469,7 @@ class report {
      * Get centralize reports.
      */
     public function centralised_reports() {
-        global $OUTPUT, $CFG;
+        global $OUTPUT, $CFG, $DB;
         require_once($CFG->dirroot. "/course/lib.php");
         $reporthtml = "";
         $page = optional_param('page', 0, PARAM_INT);
@@ -488,7 +488,8 @@ class report {
             foreach ($courses as $course) {
                 $list = [];
                 $list['coursename'] = $course->get_formatted_fullname();
-                $activities = get_array_of_activities($course->id);
+                $courserecord = $DB->get_record('course', ['id' => $course->id]);
+                $activities = \course_modinfo::get_array_of_activities($courserecord);
                 $list['activities'] = $activities;
                 $data[$course->id] = $list;
             }
@@ -577,7 +578,7 @@ class report {
             $records = $DB->get_records_sql($sql, $params); */
         ///} else {
             $sql = "SELECT lg.userid, c.fullname AS coursename, u.firstname, u.lastname, u.email, u.department, count(lg.id) As views,
-            (SELECT SUM(lvt.timespent) FROM {local_visits_track} lvt WHERE lvt.userid = lg.userid
+            (SELECT SUM(CAST(lvt.timespent AS BIGINT)) FROM {local_visits_track} lvt WHERE lvt.userid = lg.userid
             AND lvt.cmid = :cmid $visitstrackfiltersql GROUP BY lvt.userid) AS timespent
             FROM {logstore_standard_log} lg
             JOIN {user} u ON u.id = lg.userid
@@ -585,7 +586,7 @@ class report {
             JOIN {role_assignments} r ON r.userid = lg.userid AND r.contextid = :coursecontext AND r.roleid $studentsql
             WHERE lg.action = 'viewed' AND lg.target='course_module' AND lg.objectid = :moduleinstance
             AND lg.contextinstanceid = :cm AND lg.courseid = :courseid $logfiltersql
-            GROUP BY lg.userid ORDER BY count(lg.id) DESC";
+            GROUP BY lg.userid, c.fullname, u.firstname, u.lastname, u.email, u.department ORDER BY count(lg.id) DESC";
             $params = [
                 'moduleinstance' => $modinfo->id,
                 'cmid' => $modinfo->cm,
@@ -822,7 +823,7 @@ class report {
     public static function available_departments() {
         global $DB;
 
-        $sql = 'SELECT id, department FROM {user} u GROUP BY department';
+        $sql = 'SELECT id, department FROM {user} u GROUP BY id, department';
         $data = $DB->get_records_sql($sql, []);
         if (isset($data[1])) {
             $data[1]->department = get_string('alldepart', 'block_visitsreport');
@@ -857,7 +858,7 @@ class report {
             $params['courseid'] = $this->courseid;
         }
         $sql .= $filtersql;
-        $sql .= 'GROUP BY l.userid ORDER BY visits DESC';
+        $sql .= ' GROUP BY u.id, u.department, u.firstname, u.lastname ORDER BY visits DESC';
 
         $users = $DB->get_records_sql($sql, $params + $inparams, 0, 20);
 
@@ -979,7 +980,7 @@ class report {
         }
 
 
-        $sql = 'SELECT * FROM {'.$this->logtable.'} WHERE action="viewed" AND userid '.$insql.' AND courseid=:courseid ';
+        $sql = "SELECT * FROM {".$this->logtable."} WHERE action='viewed' AND userid ".$insql." AND courseid=:courseid ";
         $params = ['courseid' => $this->courseid];
         $conditionsql = $this->generate_timestamp($params);
         $sql .= ' AND (' . $conditionsql.')';
@@ -1058,7 +1059,7 @@ class report {
         }
         $sql .= $filtersql;
 
-        $sql .= 'GROUP BY l.userid ORDER BY visits DESC';
+        $sql .= ' GROUP BY l.userid, u.firstname, u.lastname ORDER BY visits DESC';
 
         $xlabel = get_string('visits', 'block_visitsreport');
         $records = $DB->get_records_sql($sql, $params + $inparams, 0, 20);
@@ -1099,7 +1100,7 @@ class report {
             WHERE lvt.userid = :userid
             AND lvt.userid ".$insql;
             $sql .= $filtersql;
-            $sql .= " GROUP BY lvt.courseid ORDER BY timespent DESC";
+            $sql .= " GROUP BY lvt.courseid, c.fullname, lvt.timecreated ORDER BY timespent DESC";
 
             $params['userid'] = $this->userid;
 
@@ -1110,7 +1111,7 @@ class report {
             $yfield = 'fullname';
         } else {
 
-            $sql = "SELECT lvt.userid, u.firstname, u.lastname, lvt.timecreated, SUM(lvt.timespent) as timespent, count(*) AS usersessions
+            $sql = "SELECT lvt.userid, u.firstname, u.lastname, lvt.timecreated, SUM(CAST(lvt.timespent AS BIGINT)) as timespent, count(*) AS usersessions
                 FROM {local_visits_track} lvt
                 INNER JOIN {user} u ON u.id = lvt.userid
                 WHERE lvt.userid ".$insql;
@@ -1125,7 +1126,7 @@ class report {
                 $sql .= ' AND lvt.userid = :userid ';
                 $params['userid'] = $this->userid;
             }
-            $sql .= " GROUP BY lvt.userid ORDER BY timespent DESC";
+            $sql .= " GROUP BY lvt.userid, u.firstname, u.lastname, lvt.timecreated ORDER BY timespent DESC";
 
             $labelfunction = (function($value) use (&$labels) {
                 $labels[] = $value->firstname.' '.$value->lastname;
