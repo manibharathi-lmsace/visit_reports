@@ -37,6 +37,12 @@ class report {
 
     public $method;
 
+    public $logtable;
+
+    public $maxseconds;
+
+    public $courseid;
+
     public $is_timetracking_available = false;
 
     public $filter = [];
@@ -722,13 +728,11 @@ class report {
 
         $months = $this->get_last_months();
         list($insql, $inparams) = $this->find_adminuser();
-        $sql = "SELECT MONTH(FROM_UNIXTIME(`timecreated`)) as createdmonth, timecreated, COUNT(*) as visits
+        $sql = "SELECT timecreated
             FROM {".$this->logtable."} WHERE
             timecreated BETWEEN :timestart and :timeend
             AND action='viewed'
-            AND userid ".$insql."
-            GROUP BY MONTH(FROM_UNIXTIME(`timecreated`))
-        ";
+            AND userid ".$insql;
         $params = [
             'timestart' => end($months),
             'timeend' => reset($months)
@@ -737,7 +741,22 @@ class report {
             $params = ['timestart' => $this->filter['start_timestamp'], 'timeend' => $this->filter['end_timestamp']];
         }
 
-        $report = $DB->get_records_sql($sql, $params + $inparams );
+        $rawrecords = $DB->get_records_sql($sql, $params + $inparams);
+
+        $grouped = [];
+        foreach ($rawrecords as $rawrecord) {
+            $monthkey = date('Y-m', $rawrecord->timecreated);
+            if (!isset($grouped[$monthkey])) {
+                $grouped[$monthkey] = (object) [
+                    'createdmonth' => (int) date('n', $rawrecord->timecreated),
+                    'timecreated' => $rawrecord->timecreated,
+                    'visits' => 0,
+                ];
+            }
+            $grouped[$monthkey]->visits++;
+        }
+        ksort($grouped);
+        $report = array_values($grouped);
 
         $ylabel = get_string('visits', 'block_visitsreport');
         $visits  = (!empty($report)) ? $this->chart_series($ylabel, array_column($report, 'visits')) : [];
@@ -782,7 +801,7 @@ class report {
 
         $sql = 'SELECT l.courseid as id, l.courseid, c.fullname, count(*) as visits FROM {'.$this->logtable.'} l
         INNER JOIN {course} c on c.id = l.courseid
-        WHERE l.courseid > 1 AND l.userid '.$insql.' '. $filtersql .' GROUP BY l.courseid ORDER BY visits DESC ';
+        WHERE l.courseid > 1 AND l.userid '.$insql.' '. $filtersql .' GROUP BY l.courseid, c.fullname ORDER BY visits DESC ';
         $records = $DB->get_records_sql($sql, $inparams);
 
         $xlabel = get_string('visits', 'block_visitsreport');
@@ -873,9 +892,9 @@ class report {
             $params = ['startdate' => $this->filter['start_timestamp'], 'enddate' => $this->filter['end_timestamp']];
         }
 
-        $sql = "SELECT u.id, u.department, SUM(vt.timespent) AS dpart_timespent, count(*) AS userscount FROM {user} u
+        $sql = "SELECT u.id, u.department, SUM(CAST(vt.timespent AS BIGINT)) AS dpart_timespent, count(*) AS userscount FROM {user} u
         LEFT JOIN {local_visits_track} vt ON vt.userid = u.id
-        WHERE u.department <> '' ".$filtersql." GROUP BY department ";
+        WHERE u.department <> '' ".$filtersql." GROUP BY u.id, u.department ";
 
         $dpartusers = $DB->get_records_sql($sql, $params);
         $xlabel = get_string('timespent', 'block_visitsreport');
