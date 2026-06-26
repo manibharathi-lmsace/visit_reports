@@ -382,6 +382,7 @@
 .visits-report-element .reports-block .course-info-block .info-block {
 	padding: 0;
 	margin-bottom: 10px;
+	align-items: normal;
 }
 .visits-report-element .reports-block .course-info-block > .info-block .card .course-info-download .no-overflow {
 	display: none;
@@ -413,7 +414,8 @@
 	width: 30px;
 	height: 30px;
 	font-size: 16px;
-    font-family: 'FontAwesome';
+    font-family: var(--fa-style-family, "Font Awesome 6 Free", fontawesome);
+	font-weight: 900;
 	color: #fff;
 	line-height: 30px;
 	text-align: center;

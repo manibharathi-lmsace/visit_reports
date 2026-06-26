@@ -108,12 +108,12 @@ class filterform extends \moodleform {
         if (isset($this->_customdata['reportname']) && in_array($this->_customdata['reportname'], $selectusersreports)) {
             $users = $options = [];
             if (isset($this->_customdata['courseid']) && !empty($this->_customdata['courseid'])) {
-                $users = ['' => get_string('user')];
                 $context = context_course::instance($this->_customdata['courseid']);
-                $users += get_enrolled_users($context);
+                $users = get_enrolled_users($context);
                 array_walk($users, function(&$user) {
                     $user = fullname($user);
                 });
+                $users = ['' => get_string('user')] + $users;
 
             } else {
                 $options = [

@@ -25,6 +25,7 @@
 defined('MOODLE_INTERNAL') || die;
 
 $plugin->component = 'block_visitsreport';
-$plugin->version = 2022110800;
+$plugin->version = 2026062600;
 $plugin->maturity  = MATURITY_STABLE;
 $plugin->release   = '1.0';
+$plugin->supports = [308, 405];
